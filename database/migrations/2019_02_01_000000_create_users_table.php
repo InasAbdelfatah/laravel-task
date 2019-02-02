@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->boolean('is_admin');
-            $table->integer('company')->unsigned()->nullable();
+            $table->integer('company_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

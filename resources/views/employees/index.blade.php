@@ -5,42 +5,47 @@
     <div class="card">
       <div class="card-header">
 
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createCompany">Create new company</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createCompany">Create new Employee</button>
 
         <!-- Modal -->
         <div class="modal fade" id="createCompany" tabindex="-1" role="dialog" aria-labelledby="createCompanyLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="createCompanyLabel">Create new Company</h5>
+                <h5 class="modal-title" id="createCompanyLabel">Create new Employee</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <form id="storeCompany" action="{{ route('companies.store') }}" method="post" enctype="multipart/form-data">
+              <form id="storeCompany" action="{{ route('employees.store') }}" method="post" enctype="multipart/form-data">
               <div class="modal-body">
                 
                     {{ csrf_field() }}
                   <div class="form-group">
-                    <label class="col-form-label">Name:</label>
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}" required>
+                    <label class="col-form-label">First Name:</label>
+                    <input type="text" class="form-control" name="first_name" value="{{old('first_name')}}" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label">Last Name:</label>
+                    <input type="text" class="form-control" name="last_name" value="{{old('last_name')}}" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label">Phone:</label>
+                    <input type="text" class="form-control" name="phone" value="{{old('phone')}}" required>
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Email:</label>
                     <input type="text" class="form-control" name="email" value="{{old('email')}}">
                   </div>
                   <div class="form-group">
-                    <label class="col-form-label">Website:</label>
-                    <input type="text" class="form-control" name="website" value="{{old('website')}}">
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label">Address:</label>
-                    <input type="text" class="form-control" name="address" value="{{old('address')}}">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-form-label">Logo:</label>
-                    <input type="file" class="form-control-file" name="logo">
+                    <label class="col-form-label">Company:</label>
+                    <select class="form-control" name="company">
+                      @forelse($companies as $company)
+                        <option value="{{$company->id}}">{{$company->name}}</option>
+                      @empty
+                        <option value="">no companies</option>
+                      @endforelse
+                    </select>
                   </div>
                 
               </div>
@@ -55,70 +60,70 @@
 
       </div>
         <div class="card-body">
-            <h5 class="card-title">Companies list</h5>
+            <h5 class="card-title">Employees list</h5>
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Website</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Phone</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Logo</th>
+                  <th scope="col">Company</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                @forelse($companies as $company)
+                @forelse($employees as $employee)
                 <tr>
-                  <th scope="row">{{$company->name}}</th>
-                  <td>{{$company->address}}</td>
-                  <td>{{$company->website}}</td>
-                  <td>{{$company->email}}</td>
+                  <th scope="row">{{$employee->first_name}}</th>
+                  <td>{{$employee->last_name}}</td>
+                  <td>{{$employee->phone}}</td>
+                  <td>{{$employee->email}}</td>
+                  <td>{{$employee->company ? $employee->company->name : ''}}</td>
                   <td>
-                    @if($company->logo != '')
-                        <img style="width: 100px; height: 100px;" class="avatar" src="{{ asset('storage/'.$company->logo) }}"/>
-                    @endif
-                    </td>
-                  <td>
-                    <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal{{$company->id}}">Edit</button>
+                    <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal{{$employee->id}}">Edit</button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal{{$company->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal{{$employee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Edit Company</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Employee</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <form id="editCompany" action="{{ route('companies.update', $company->id) }}" method="post" enctype="multipart/form-data">
+                          <form id="editEmployee" action="{{ route('employees.update', $employee->id) }}" method="post">
                           <div class="modal-body">
                             
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}
                               <div class="form-group">
-                                <label class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" name="name" value="{{$company->name}}" required>
+                                <label class="col-form-label">First Name:</label>
+                                <input type="text" class="form-control" name="first_name" value="{{$employee->first_name}}" required>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-form-label">Last Name:</label>
+                                <input type="text" class="form-control" name="last_name" value="{{$employee->last_name}}" required>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-form-label">Phone:</label>
+                                <input type="text" class="form-control" name="phone" value="{{$employee->phone}}" required>
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Email:</label>
-                                <input type="text" class="form-control" name="email" value="{{$company->email}}">
+                                <input type="text" class="form-control" name="email" value="{{$employee->email}}">
                               </div>
                               <div class="form-group">
-                                <label class="col-form-label">Website:</label>
-                                <input type="text" class="form-control" name="website" value="{{$company->website}}">
+                                <label class="col-form-label">Company:</label>
+                                <select class="form-control" name="company">
+                                  @forelse($companies as $company)
+                                    <option value="{{$company->id}}">{{$company->name}}</option>
+                                  @empty
+                                    <option value="">no companies</option>
+                                  @endforelse
+                                </select>
                               </div>
-                              <div class="form-group">
-                                <label class="col-form-label">Address:</label>
-                                <input type="text" class="form-control" name="address" value="{{$company->address}}">
-                              </div>
-
-                              <div class="form-group">
-                                <label class="col-form-label">Logo:</label>
-                                <input type="file" class="form-control-file" name="logo">
-                              </div>
-                            
                           </div>
                           <div class="modal-footer">
                             <button type="reset" class="btn btn-secondary" data-dismiss="modal" onclick="Custombox.close();">Close</button>
@@ -129,7 +134,7 @@
                       </div>
                     </div>
 
-                    <button type="button" class="btn btn-danger delete" id="delete{{ $company->id }}" data-id="{{ $company->id }}" data-url="{{ route('companies.destroy', $company->id) }}">Delete</button>
+                    <button type="button" class="btn btn-danger delete" id="delete{{ $employee->id }}" data-id="{{ $employee->id }}" data-url="{{ route('employees.destroy', $employee->id) }}">Delete</button>
                 </tr>
                 @empty
                 <tr>
@@ -139,7 +144,7 @@
               </tbody>
             </table>
 
-            {{ $companies->links() }}
+            {{ $employees->links() }}
         </div>
     </div>
 </div>
@@ -174,7 +179,7 @@
                         var $toast = toastr[shortCutFunction](msg, title);
                         $toastlast = $toast;
                         Custombox.close();
-                        //$("#order_status" + data.id).html('سارى');
+                        //$("#name" + data.id).html('inas');
                         location.reload();
                     }
 
@@ -200,7 +205,7 @@
             });
         });
 
-        $('form#editCompany').on('submit', function (e) {
+        $('form#editEmployee').on('submit', function (e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
@@ -226,7 +231,7 @@
                         var $toast = toastr[shortCutFunction](msg, title);
                         $toastlast = $toast;
                         Custombox.close();
-                        //$("#order_status" + data.id).html('سارى');
+                        //$("#name" + data.id).html('inas');
                         location.reload();
                     }
 
@@ -279,7 +284,7 @@
                         success: function (data) {
                             if (data.status == true) {
                                 var shortCutFunction = 'success';
-                                var msg = 'company has been deleted successfully';
+                                var msg = 'Employee has been deleted successfully';
                                 var title = data.title;
                                 toastr.options = {
                                     positionClass: 'toast-top-left',

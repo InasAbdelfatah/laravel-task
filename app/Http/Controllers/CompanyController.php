@@ -107,7 +107,7 @@ class CompanyController extends Controller
         if (!$model) {
             return response()->json([
                 'status' => 400,
-                'message' => 'الحراثة غير موجودة'
+                'message' => 'Company not found'
             ]);
         }
 
