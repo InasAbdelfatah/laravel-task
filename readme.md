@@ -5,7 +5,7 @@ Prerequisites
 1- install local server in your machine in order to provide mysql db
 you can install xampp as localhost .
 you can download xampp through this link : https://www.apachefriends.org/index.html
-and install it.
+and install it. <br/>
 2- setup composer in your machine
 
 Installing
