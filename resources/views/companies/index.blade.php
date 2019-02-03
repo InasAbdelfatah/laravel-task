@@ -27,11 +27,11 @@
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Email:</label>
-                    <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                    <input type="email" class="form-control" name="email" value="{{old('email')}}">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Website:</label>
-                    <input type="text" class="form-control" name="website" value="{{old('website')}}">
+                    <input type="url" class="form-control" name="website" value="{{old('website')}}">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Address:</label>
@@ -46,7 +46,7 @@
               </div>
               <div class="modal-footer">
                 <button type="reset" class="btn btn-secondary" data-dismiss="modal" onclick="Custombox.close();">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary storeCompanyForm">Save changes</button>
               </div>
               </form>
             </div>
@@ -103,11 +103,11 @@
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Email:</label>
-                                <input type="text" class="form-control" name="email" value="{{$company->email}}">
+                                <input type="email" class="form-control" name="email" value="{{$company->email}}">
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Website:</label>
-                                <input type="text" class="form-control" name="website" value="{{$company->website}}">
+                                <input type="url" class="form-control" name="website" value="{{$company->website}}">
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Address:</label>
@@ -122,7 +122,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="reset" class="btn btn-secondary" data-dismiss="modal" onclick="Custombox.close();">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary" CausesValidation="False">Save changes</button>
                           </div>
                           </form>
                         </div>
@@ -148,183 +148,202 @@
 @section('script')
     <script type="text/javascript">
         console.log('test');
-        $('form#storeCompany').on('submit', function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                type: 'PUT',
-                url: $(this).attr('action'),
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    console.log(data);
-                    if (data.status == true) {
-                        var shortCutFunction = 'success';
-                        var msg = data.message;
-                        var title = 'success';
-                        toastr.options = {
-                            positionClass: 'toast-top-center',
-                            onclick: null,
-                            showMethod: 'slideDown',
-                            hideMethod: "slideUp",
+        $(document).ready(function() {
+        
+          $('form#storeCompany').on('submit', function (e) {
+              e.preventDefault();
+              var formData = new FormData(this);
+              console.log(formData.values());
+              for (var value of formData.values()) {
+                  console.log(value); 
+              }
+              $.ajax({
+                  type: 'POST',
+                  //headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                  url: $(this).attr('action'),
+                  data: formData,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  success: function (data) {
+                      console.log(data);
+                      if (data.status == true) {
+                          var shortCutFunction = 'success';
+                          var msg = data.message;
+                          var title = 'success';
+                          toastr.options = {
+                              positionClass: 'toast-top-center',
+                              onclick: null,
+                              showMethod: 'slideDown',
+                              hideMethod: "slideUp",
 
-                        };
-                        var $toast = toastr[shortCutFunction](msg, title);
-                        $toastlast = $toast;
-                        Custombox.close();
-                        //$("#order_status" + data.id).html('سارى');
-                        location.reload();
-                    }
+                          };
+                          var $toast = toastr[shortCutFunction](msg, title);
+                          $toastlast = $toast;
+                          location.reload();
+                          Custombox.close();
+                          //$("#name" + data.id).html('inas');
+                          
+                      }
 
-                    if (data.status == false) {
-                        var shortCutFunction = 'error';
-                        var msg = data.message;
-                        var title = 'error';
-                        toastr.options = {
-                            positionClass: 'toast-top-center',
-                            onclick: null,
-                            showMethod: 'slideDown',
-                            hideMethod: "slideUp",
+                      if (data.status == false) {
+                          var shortCutFunction = 'error';
+                          var msg = data.message;
+                          var title = 'error';
+                          toastr.options = {
+                              positionClass: 'toast-top-center',
+                              onclick: null,
+                              showMethod: 'slideDown',
+                              hideMethod: "slideUp",
 
-                        };
-                        var $toast = toastr[shortCutFunction](msg, title);
-                        $toastlast = $toast;
-                    }
+                          };
+                          var $toast = toastr[shortCutFunction](msg, title);
+                          $toastlast = $toast;
+                      }
 
-                },
-                error: function (data) {
+                  },
+                  error: function (data) {
 
-                }
-            });
+                  }
+              });
+
+              return false;
+          });
+
+
+          $('form#editCompany').on('submit', function (e) {
+              e.preventDefault();
+              var formData = new FormData(this);
+              for (var value of formData.keys()) {
+                  console.log(value); 
+              }
+
+              $.ajax({
+                  type: 'POST',
+                  url: $(this).attr('action'),
+                  data: formData,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  success: function (data) {
+                      console.log(data);
+                      if (data.status == true) {
+                          var shortCutFunction = 'success';
+                          var msg = data.message;
+                          var title = 'success';
+                          toastr.options = {
+                              positionClass: 'toast-top-center',
+                              onclick: null,
+                              showMethod: 'slideDown',
+                              hideMethod: "slideUp",
+
+                          };
+                          var $toast = toastr[shortCutFunction](msg, title);
+                          $toastlast = $toast;
+                          location.reload();
+                          Custombox.close();
+                          //$("#name" + data.id).html('inas');
+                          //location.reload();
+                      }
+
+                      if (data.status == false) {
+                          var shortCutFunction = 'error';
+                          var msg = data.message;
+                          var title = 'error';
+                          toastr.options = {
+                              positionClass: 'toast-top-center',
+                              onclick: null,
+                              showMethod: 'slideDown',
+                              hideMethod: "slideUp",
+
+                          };
+                          var $toast = toastr[shortCutFunction](msg, title);
+                          $toastlast = $toast;
+                      }
+
+                  },
+                  error: function (data) {
+
+                  }
+              });
+          });
+
+          $('body').on('click', '.delete', function () {
+              var id = $(this).attr('data-id');
+              var url = $(this).attr('data-url');
+              var $tr = $(this).closest($('#delete' + id).parent().parent());
+              swal({
+                  title: "Are you sure",
+                  text: "",
+                  type: "error",
+                  showCancelButton: true,
+                  confirmButtonColor: "#DD6B55",
+                  confirmButtonText: "confirm",
+                  cancelButtonText: "cancel",
+                  confirmButtonClass: 'btn-danger waves-effect waves-light',
+                  closeOnConfirm: true,
+                  closeOnCancel: true,
+              }, function (isConfirm) {
+                  if (isConfirm) {
+                      console.log('confirmed');
+                      $.ajax({
+                          type: 'DELETE',
+                          headers: {
+                              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                          },
+                          url: url,
+                          success: function (data) {
+                              if (data.status == true) {
+                                  var shortCutFunction = 'success';
+                                  var msg = 'company has been deleted successfully';
+                                  var title = data.title;
+                                  toastr.options = {
+                                      positionClass: 'toast-top-left',
+                                      onclick: null
+                                  };
+                                  var $toast = toastr[shortCutFunction](msg, title);
+                                  $toastlast = $toast;
+
+                                  $tr.find('td').fadeOut(1000, function () {
+                                      $tr.remove();
+                                  });
+                              }
+                              if (data.status == false) {
+                                  var shortCutFunction = 'error';
+                                  var msg = data.message;
+                                  var title = data.title;
+                                  toastr.options = {
+                                      positionClass: 'toast-top-left',
+                                      onclick: null
+                                  };
+                                  var $toast = toastr[shortCutFunction](msg, title);
+                                  $toastlast = $toast;
+                              }
+                          },
+                          error: function(data) {
+                             console.log(data);
+                          }
+                      });
+                  } else {
+
+                      swal({
+                          title: "cancelled",
+                          text: "",
+                          type: "error",
+                          showCancelButton: false,
+                          confirmButtonColor: "#DD6B55",
+                          confirmButtonText: "confirm",
+                          confirmButtonClass: 'btn-info waves-effect waves-light',
+                          closeOnConfirm: false,
+                          closeOnCancel: false
+
+                      });
+
+                  }
+              });
+          });
+
         });
-
-        $('form#editCompany').on('submit', function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                type: 'PUT',
-                url: $(this).attr('action'),
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    console.log(data);
-                    if (data.status == true) {
-                        var shortCutFunction = 'success';
-                        var msg = data.message;
-                        var title = 'success';
-                        toastr.options = {
-                            positionClass: 'toast-top-center',
-                            onclick: null,
-                            showMethod: 'slideDown',
-                            hideMethod: "slideUp",
-
-                        };
-                        var $toast = toastr[shortCutFunction](msg, title);
-                        $toastlast = $toast;
-                        Custombox.close();
-                        //$("#order_status" + data.id).html('سارى');
-                        location.reload();
-                    }
-
-                    if (data.status == false) {
-                        var shortCutFunction = 'error';
-                        var msg = data.message;
-                        var title = 'error';
-                        toastr.options = {
-                            positionClass: 'toast-top-center',
-                            onclick: null,
-                            showMethod: 'slideDown',
-                            hideMethod: "slideUp",
-
-                        };
-                        var $toast = toastr[shortCutFunction](msg, title);
-                        $toastlast = $toast;
-                    }
-
-                },
-                error: function (data) {
-
-                }
-            });
-        });
-
-        $('body').on('click', '.delete', function () {
-            var id = $(this).attr('data-id');
-            var url = $(this).attr('data-url');
-            var $tr = $(this).closest($('#delete' + id).parent().parent());
-            swal({
-                title: "Are you sure",
-                text: "",
-                type: "error",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "confirm",
-                cancelButtonText: "cancel",
-                confirmButtonClass: 'btn-danger waves-effect waves-light',
-                closeOnConfirm: true,
-                closeOnCancel: true,
-            }, function (isConfirm) {
-                if (isConfirm) {
-                    console.log('confirmed');
-                    $.ajax({
-                        type: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: url,
-                        success: function (data) {
-                            if (data.status == true) {
-                                var shortCutFunction = 'success';
-                                var msg = 'company has been deleted successfully';
-                                var title = data.title;
-                                toastr.options = {
-                                    positionClass: 'toast-top-left',
-                                    onclick: null
-                                };
-                                var $toast = toastr[shortCutFunction](msg, title);
-                                $toastlast = $toast;
-
-                                $tr.find('td').fadeOut(1000, function () {
-                                    $tr.remove();
-                                });
-                            }
-                            if (data.status == false) {
-                                var shortCutFunction = 'error';
-                                var msg = data.message;
-                                var title = data.title;
-                                toastr.options = {
-                                    positionClass: 'toast-top-left',
-                                    onclick: null
-                                };
-                                var $toast = toastr[shortCutFunction](msg, title);
-                                $toastlast = $toast;
-                            }
-                        },
-                        error: function(data) {
-                           console.log(data);
-                        }
-                    });
-                } else {
-
-                    swal({
-                        title: "cancelled",
-                        text: "",
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "confirm",
-                        confirmButtonClass: 'btn-info waves-effect waves-light',
-                        closeOnConfirm: false,
-                        closeOnCancel: false
-
-                    });
-
-                }
-            });
-        });
+        
     </script>
 @endsection

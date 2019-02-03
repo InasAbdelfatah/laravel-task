@@ -9,6 +9,12 @@ use App\Company;
 
 class EmployeeController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +45,6 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-
         $rules = [
             'first_name' => 'required|min:3|max:25',
             'last_name' => 'required|min:3|max:25',
@@ -52,7 +57,7 @@ class EmployeeController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status'=>false,'error' => $validator->errors()->first()]);
+            return response()->json(['status'=>false,'message' => $validator->errors()->first()]);
         }
 
         $model = new User();
@@ -111,7 +116,7 @@ class EmployeeController extends Controller
 
         if (!$model) {
             return response()->json([
-                'status' => 400,
+                'status' => false,
                 'message' => 'Employee not found'
             ]);
         }
@@ -127,7 +132,7 @@ class EmployeeController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status'=>false,'error' => $validator->errors()->first()]);
+            return response()->json(['status'=>false,'message' => $validator->errors()->first()]);
         }
 
         $model->first_name = $request->first_name;

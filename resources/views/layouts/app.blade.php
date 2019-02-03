@@ -26,6 +26,16 @@
     <link href="{{ asset('assets/css/sweet-alert.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/toastr.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="app">
@@ -92,13 +102,8 @@
         </main>
     </div>
 
+    
     <script type="text/javascript">
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
         @if(session()->has('success'))
             setTimeout(function () {
                 showMessage('{{ session()->get('success') }}' , 'success');

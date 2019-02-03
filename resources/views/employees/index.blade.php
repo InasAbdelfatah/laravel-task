@@ -31,11 +31,11 @@
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Phone:</label>
-                    <input type="text" class="form-control" name="phone" value="{{old('phone')}}" required>
+                    <input type="text" class="form-control" name="phone" value="{{old('phone')}}">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Email:</label>
-                    <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                    <input type="email" class="form-control" name="email" value="{{old('email')}}">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Company:</label>
@@ -108,17 +108,17 @@
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Phone:</label>
-                                <input type="text" class="form-control" name="phone" value="{{$employee->phone}}" required>
+                                <input type="text" class="form-control" name="phone" value="{{$employee->phone}}">
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Email:</label>
-                                <input type="text" class="form-control" name="email" value="{{$employee->email}}">
+                                <input type="email" class="form-control" name="email" value="{{$employee->email}}">
                               </div>
                               <div class="form-group">
                                 <label class="col-form-label">Company:</label>
                                 <select class="form-control" name="company">
                                   @forelse($companies as $company)
-                                    <option value="{{$company->id}}">{{$company->name}}</option>
+                                    <option value="{{$company->id}}" {{$company->id == $employee->company_id ? 'selected' : ''}}>{{$company->name}}</option>
                                   @empty
                                     <option value="">no companies</option>
                                   @endforelse
@@ -152,12 +152,13 @@
 
 @section('script')
     <script type="text/javascript">
+      $(document).ready(function() {
         console.log('test');
         $('form#storeCompany').on('submit', function (e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
-                type: 'PUT',
+                type: 'POST',
                 url: $(this).attr('action'),
                 data: formData,
                 cache: false,
@@ -178,9 +179,10 @@
                         };
                         var $toast = toastr[shortCutFunction](msg, title);
                         $toastlast = $toast;
+                        location.reload();
                         Custombox.close();
                         //$("#name" + data.id).html('inas');
-                        location.reload();
+                        
                     }
 
                     if (data.status == false) {
@@ -209,7 +211,7 @@
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
-                type: 'PUT',
+                type: 'POST',
                 url: $(this).attr('action'),
                 data: formData,
                 cache: false,
@@ -230,12 +232,14 @@
                         };
                         var $toast = toastr[shortCutFunction](msg, title);
                         $toastlast = $toast;
+                        location.reload();
                         Custombox.close();
                         //$("#name" + data.id).html('inas');
-                        location.reload();
+                        
                     }
 
                     if (data.status == false) {
+                      console.log(data);
                         var shortCutFunction = 'error';
                         var msg = data.message;
                         var title = 'error';
@@ -331,5 +335,6 @@
                 }
             });
         });
+      });
     </script>
 @endsection

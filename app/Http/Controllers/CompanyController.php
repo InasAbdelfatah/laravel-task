@@ -8,6 +8,12 @@ use App\Company;
 
 class CompanyController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +46,7 @@ class CompanyController extends Controller
 
         $rules = [
             'name' => 'required|min:3|max:255',
-            "logo"  => "image|dimensions:min_width=100,min_height=100",
+            'logo'  => 'image|dimensions:min_width=100,min_height=100',
             
         ];
 
@@ -48,7 +54,7 @@ class CompanyController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status'=>false,'error' => $validator->errors()->first()]);
+            return response()->json(['status'=>false,'message' => $validator->errors()->first()]);
         }
 
         $model = new Company();
@@ -61,7 +67,7 @@ class CompanyController extends Controller
         if($model->save()){
             return response()->json([
                 'status' => true,
-                'message' => 'company updated',
+                'message' => 'company inserted',
             ]);
         }
 
@@ -113,7 +119,7 @@ class CompanyController extends Controller
 
         $rules = [
             'name' => 'required|min:3|max:255',
-            "logo"  => "image|dimensions:min_width=100,min_height=100",
+            //'logo'  => 'image|dimensions:min_width=100,min_height=100',
             
         ];
 
@@ -121,7 +127,7 @@ class CompanyController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['status'=>false,'error' => $validator->errors()->first()]);
+            return response()->json(['status'=>false,'message' => $validator->errors()->first()]);
         }
 
         if($request->has('name')):
